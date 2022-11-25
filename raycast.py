@@ -106,47 +106,6 @@ def cast_blockmap_first(start_x : float, start_y : float, end_x : float, end_y :
 
     return 0
 
-def cast_blockmap_bresenham_first(start_x : float, start_y : float, end_x : float, end_y : float, map : map.Map):
-    dx = abs(end_x - start_x)
-    dy = abs(end_y - start_y)
-
-    if dx > dy : decision = False
-    else : decision = True
-   
-    pk = 2 * dy - dx
-
-    for i in range(0,dx+1):
-        # checking either to decrement or increment the
-        # value if we have to plot from (0,100) to (100,0)
-        if(start_x < end_x):
-            start_x += 1
-        else:
-            start_x -= 1
-        if (pk < 0):
-            # decision value will decide to plot
-            if (decision == False):
-                
-                coords = ((start_x // map.scale), (start_y // map.scale))
-                if (coords[0] > map.height-1 or coords[1] > map.width-1 or coords[0] < 0 or coords[1] < 0):     #check if out of bounds
-                    #warnings.warn(f"Attempted to read map out of bounds at {coords}")
-                    return None
-                map_value = map.map[coords[1]][coords[0]]
-                if map_value != "0":
-                    return map_value
-                
-                pk = pk + 2 * dy
-            else:
-            # putpixel(y1, x1, YELLOW);
-                pk = pk + 2 * dy
-        else:
-            if (start_y < end_y):
-                start_y = start_y + 1
-            else:
-                start_y = start_y - 1
-            
-        pk = pk + 2 * dy - 2 * dx
-
-
 def cast_actors(start : tuple, end : tuple, actors : list):
     dx = abs(end[0] - start[0])
     dy = abs(end[1] - start[1])
@@ -210,6 +169,7 @@ def main():
         y_start = random.randint(0, 320)
         x_end = random.randint(0, 320)
         y_end = random.randint(0, 320)
+        cast_blockmap_bresenham_first(x_start, y_start, x_end, y_end, worldMap)
         cast_blockmap_first(x_start, y_start, x_end, y_end, worldMap)
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ def init(width, height):
     return screen
 
 def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player):
+    log = ""
     screen_size = screen.get_width()
     screen_height = screen.get_height()
 
@@ -28,6 +29,8 @@ def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player)
 
     camera_plane_portion_x = camera_plane_x / screen_size
     camera_plane_portion_y = camera_plane_y / screen_size
+    
+    
     
     for pixel_x in range(screen_size):
         #calculate ray
@@ -63,12 +66,16 @@ def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player)
         #        break
 
         #Fast -> calculates for first intersection
+        
         hit = raycast.cast_blockmap_first(ray_start_x, ray_start_y, ray_end_x, ray_end_y, map)
+        log += hit + "\n"
         if hit == '1':
             screen.fill(0x0000ff, (pixel_x, 0, pixel_x+1, 600))
         elif hit == '2':
             screen.fill(0x00ff00, (pixel_x, 0, pixel_x+1, 600))
-        
+    fHandle = open("renderlog.log", "a")
+    fHandle.write(log)
+    fHandle.close()
     pygame.display.flip()
     return
     #logfile = open("renderlog.log", "a")
