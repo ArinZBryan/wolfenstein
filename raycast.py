@@ -3,36 +3,26 @@ import actors as actors
 import math
 
 def cast_blockmap_bresenham_first(x0, y0, x1, y1, map : map.Map):
-    """Yield integer coordinates on the line from (x0, y0) to (x1, y1).
-    Input coordinates should be integers.
-    The result will contain both the start and the end point.
-    """
     dx = x1 - x0
     dy = y1 - y0
-
     xsign = 1 if dx > 0 else -1
     ysign = 1 if dy > 0 else -1
-
     dx = abs(dx)
     dy = abs(dy)
-
     if dx > dy:
         xx, xy, yx, yy = xsign, 0, 0, ysign
     else:
         dx, dy = dy, dx
         xx, xy, yx, yy = 0, ysign, xsign, 0
-
     D = 2*dy - dx
     y = 0
-
     for x in range(int(dx) + 1):
         #coords are (x0 + x*xx + y*yx, y0 + x*xy + y*yy)
-        #yield coord
-        coords = (((x0 + x*xx + y*yx) // map.scale), ((y0 + x*xy + y*yy) // map.scale))
-        if (coords[0] > map.height-1 or coords[1] > map.width-1 or coords[0] < 0 or coords[1] < 0):     #check if out of bounds
-            #warnings.warn(f"Attempted to read map out of bounds at {coords}")
+        coord_x = (x0 + x*xx + y*yx) // map.scale
+        coord_y = (y0 + x*xy + y*yy) // map.scale
+        if (coord_x > map.height-1 or coord_y > map.width-1 or coord_x < 0 or coord_y < 0):     #check if out of bounds
             return "0"
-        value = map.map[coords[1]][coords[0]]
+        value = map.map[coord_y][coord_x]
         if value != "0":
             return value
         if D >= 0:
