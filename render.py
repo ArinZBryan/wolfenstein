@@ -67,7 +67,7 @@ def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player)
 
         #Fast -> calculates for first intersection
         
-        hit = raycast.cast_blockmap_first(ray_start_x, ray_start_y, ray_end_x, ray_end_y, map)
+        hit = raycast.bresenham(ray_start_x, ray_start_y, ray_end_x, ray_end_y, map)
         log += hit + "\n"
         if hit == '1':
             screen.fill(0x0000ff, (pixel_x, 0, pixel_x+1, 600))

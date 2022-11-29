@@ -2,6 +2,44 @@ import map as map
 import actors as actors
 import math
 
+def cast_blockmap_bresenham_first(x0, y0, x1, y1, map : map.Map):
+    """Yield integer coordinates on the line from (x0, y0) to (x1, y1).
+    Input coordinates should be integers.
+    The result will contain both the start and the end point.
+    """
+    dx = x1 - x0
+    dy = y1 - y0
+
+    xsign = 1 if dx > 0 else -1
+    ysign = 1 if dy > 0 else -1
+
+    dx = abs(dx)
+    dy = abs(dy)
+
+    if dx > dy:
+        xx, xy, yx, yy = xsign, 0, 0, ysign
+    else:
+        dx, dy = dy, dx
+        xx, xy, yx, yy = 0, ysign, xsign, 0
+
+    D = 2*dy - dx
+    y = 0
+
+    for x in range(int(dx) + 1):
+        #coords are (x0 + x*xx + y*yx, y0 + x*xy + y*yy)
+        #yield coord
+        coords = (((x0 + x*xx + y*yx) // map.scale), ((y0 + x*xy + y*yy) // map.scale))
+        if (coords[0] > map.height-1 or coords[1] > map.width-1 or coords[0] < 0 or coords[1] < 0):     #check if out of bounds
+            #warnings.warn(f"Attempted to read map out of bounds at {coords}")
+            return "0"
+        value = map.map[coords[1]][coords[0]]
+        if value != "0":
+            return value
+        if D >= 0:
+            y += 1
+            D -= 2*dx
+        D += 2*dy
+    return "0"
 def cast_blockmap(start : tuple, end : tuple, map : map.Map):
     dx = abs(end[0] - start[0])
     dy = abs(end[1] - start[1])
@@ -51,7 +89,6 @@ def cast_blockmap(start : tuple, end : tuple, map : map.Map):
             error += dy
 
     return blocks
-
 def cast_blockmap_first(start_x : float, start_y : float, end_x : float, end_y : float, map : map.Map): ##All integer divisions by 1 are optimizations over math.floor()
     dx = abs(end_x - start_x)
     dy = abs(end_y - start_y)
@@ -91,7 +128,7 @@ def cast_blockmap_first(start_x : float, start_y : float, end_x : float, end_y :
         coords = ((x // map.scale), (y // map.scale))
         if (coords[0] > map.height-1 or coords[1] > map.width-1 or coords[0] < 0 or coords[1] < 0):     #check if out of bounds
             #warnings.warn(f"Attempted to read map out of bounds at {coords}")
-            return None
+            return "0"
         map_value = map.map[coords[1]][coords[0]]
 
         if map_value != "0":
@@ -103,9 +140,7 @@ def cast_blockmap_first(start_x : float, start_y : float, end_x : float, end_y :
         else:
             x += x_inc
             error += dy
-
-    return 0
-
+    return "0"
 def cast_actors(start : tuple, end : tuple, actors : list):
     dx = abs(end[0] - start[0])
     dy = abs(end[1] - start[1])
@@ -158,25 +193,3 @@ def cast_actors(start : tuple, end : tuple, actors : list):
             error += dy
 
     return actors
-
-cast_blockmap.__doc__ = """Cast a ray from start to end in woart), (x_end, y_end), worldMap)rld coordinates and return a list of all the map blocks it passes through"""
-cast_actors.__doc__ = """Cast a ray from start to end in world coordinates and return a list of all the actors it passes through"""
-
-def main():
-    worldMap = map.Map("0121212120\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n0121212120", 32)
-    for i in range(8000):
-        x_start = random.randint(0, 320)
-        y_start = random.randint(0, 320)
-        x_end = random.randint(0, 320)
-        y_end = random.randint(0, 320)
-        cast_blockmap_bresenham_first(x_start, y_start, x_end, y_end, worldMap)
-        cast_blockmap_first(x_start, y_start, x_end, y_end, worldMap)
-
-if __name__ == "__main__":
-    import cProfile as profile
-    import random as random
-    import time as time
-    profile.run("main()")
-    
-
-
