@@ -30,6 +30,7 @@ def cast_blockmap_bresenham_first(x0, y0, x1, y1, map : map.Map):
             D -= 2*dx
         D += 2*dy
     return "0"
+
 def cast_blockmap(start : tuple, end : tuple, map : map.Map):
     dx = abs(end[0] - start[0])
     dy = abs(end[1] - start[1])
@@ -183,3 +184,13 @@ def cast_actors(start : tuple, end : tuple, actors : list):
             error += dy
 
     return actors
+
+if __name__ == "__main__":
+    import cProfile as profile
+    import random as random
+    x1 = random.randint(0, 320)
+    x2 = random.randint(0, 320)
+    y1 = random.randint(0, 320)
+    y2 = random.randint(0, 320)
+    WorldMap = map.Map("0121212120\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n0121212120", 32)
+    profile.run("cast_blockmap_bresenham_first(x1, y1, x2, y2, WorldMap)")
