@@ -14,8 +14,9 @@ def handle_events():
 
 def main():
     player = actors.Player((150, 150), (0, -1), 1, 1, 500)
+    # Not done for this map, but all corners should be solid to prevent their becoming invisble
     worldmap = map.Map("0121212120\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n0121212120", 32)
-    for i in range(20):
+    for i in range(200):
         render.render_frame(screen, worldmap, player)
         handle_events()
         player.rotate(0.01 * player.rotation_speed)

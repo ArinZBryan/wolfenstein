@@ -12,7 +12,6 @@ def init(width, height):
     return screen
 
 def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player):
-    log = ""
     screen_size = screen.get_width()
     screen_height = screen.get_height()
 
@@ -30,7 +29,7 @@ def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player)
     camera_plane_portion_x = camera_plane_x / screen_size
     camera_plane_portion_y = camera_plane_y / screen_size
     
-    
+    distance_warp = 0.5
     
     for pixel_x in range(screen_size):
         #calculate ray
@@ -67,20 +66,29 @@ def render_frame(screen : pygame.Surface, map : map.Map, player : actors.Player)
 
         #Fast -> calculates for first intersection
         
-        hit = raycast.cast_blockmap_bresenham_first(ray_start_x, ray_start_y, ray_end_x, ray_end_y, map)
-        log += hit + "\n"
+        hit, end = raycast.cast_blockmap_bresenham_first(ray_start_x, ray_start_y, ray_end_x, ray_end_y, map)
         if hit == '1':
-            screen.fill(0x0000ff, (pixel_x, 0, pixel_x+1, 600))
+            distance = (((end[0] - ray_start_x)/map.scale) ** 2 + ((end[1] - ray_start_y)/map.scale) ** 2) ** 0.5
+            inverse_distance = distance ** -distance_warp
+            left = pixel_x
+            width = 1
+            height = screen_height * inverse_distance
+            top = ((screen_height - height) / 2)//1
+            rect = (left, top, width, height)
+            screen.fill(0xff0000, rect)
+            
         elif hit == '2':
-            screen.fill(0x00ff00, (pixel_x, 0, pixel_x+1, 600))
-    fHandle = open("renderlog.log", "a")
-    fHandle.write(log)
-    fHandle.close()
+            distance = (((end[0] - ray_start_x)/map.scale) ** 2 + ((end[1] - ray_start_y)/map.scale) ** 2) ** 0.5
+            inverse_distance = distance ** -distance_warp
+            left = pixel_x
+            width = 1
+            height = screen_height * inverse_distance
+            top = ((screen_height - height) / 2)//1
+            rect = (left, top, width, height)
+            screen.fill(0x00ff00, rect) 
     pygame.display.flip()
     return
     #logfile = open("renderlog.log", "a")
     #logfile.write(log)
     #logfile.close()
         
-
-
