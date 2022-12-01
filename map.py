@@ -7,12 +7,6 @@ class Map():
         self.scale = scale
         self.height = len(self.map)
         self.width = len(self.map[0])
-    
-    def map_to_world(self, x, y):
-        return (self.scale * x, self.scale * y)
-
-    def world_to_map(self, x, y):
-        return ((x // self.scale),(y // self.scale))
 
     def world_to_map_value(self, x, y):
         coords = ((x // self.scale), (y // self.scale))
@@ -20,12 +14,6 @@ class Map():
             #warnings.warn(f"Attempted to read map out of bounds at {coords}")
             return None
         return self.map[coords[1]][coords[0]]
-
-    def map_value(self, x, y):
-        if (x > len(self.map)-1 or y > len(self.map[0])-1):
-            #warnings.warn(f"Attempted to read map out of bounds at ({x}, {y})")
-            return None
-        return map[y][x]
 
 def main():
     worldMap = Map("0121212120\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n1000000002\n0121212120", 32)

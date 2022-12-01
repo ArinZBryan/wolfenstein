@@ -22,8 +22,7 @@ class Camera(Actor):
         r_point_y = self.direction[1] + self.camera_plane[1]
 
         self.left_camera_plane_point = (l_point_x, l_point_y)
-        self.right_camera_plane_point = (r_point_x, r_point_y)
-    
+        self.right_camera_plane_point = (r_point_x, r_point_y)   
     def update_camera_plane(self):
         direction_length =((self.direction[0] * self.direction[0]) + (self.direction[1] * self.direction[1])) ** -0.5
         self.direction = (self.direction[0] * direction_length, self.direction[1] * direction_length)
