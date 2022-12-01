@@ -41,7 +41,6 @@ class Camera(Actor):
 class Player(Camera):
     def __init__(self, position : tuple, direction: tuple, speed : float, rotation_speed : float, view_distance : float):
         super().__init__(position, direction, view_distance)
-        self.speed = speed
         self.rotation_speed = rotation_speed
     def rotate(self, angle : float):
         #Rotate direction
@@ -49,4 +48,13 @@ class Player(Camera):
         new_direction_y = self.direction[0] * math.sin(angle) + self.direction[1] * math.cos(angle)
         self.direction = (new_direction_x, new_direction_y)
         
+        self.update_camera_plane()
+    def move_in_world(self, direction : tuple):
+        #Move player
+        self.position = (self.position[0] + direction[0] * self.speed, self.position[1] + direction[1] * self.speed)
+        self.update_camera_plane()
+    def move_relative_fwd(self, distance : float):
+        #Move player
+        move_direction = (self.direction[0] * distance , self.direction[1] * distance)
+        self.position = (self.position[0] + move_direction[0], self.position[1] + move_direction[1])
         self.update_camera_plane()

@@ -22,7 +22,7 @@ def cast_blockmap_bresenham_first(x0, y0, x1, y1, map : map.Map):
         coord_y = (y0 + x*xy + y*yy) // map.scale
         if (coord_x > map.height-1 or coord_y > map.width-1 or coord_x < 0 or coord_y < 0):     #check if out of bounds
             return "0", (x0, y0)
-        value = map.map[coord_y][coord_x]
+        value = map.map[int(coord_y)][int(coord_x)]
         if value != "0":
             return value, (coord_x, coord_y)
         if D >= 0:
